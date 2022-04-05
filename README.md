@@ -8,7 +8,7 @@ This is a set of functions oriented to help people with low scripting experience
     - [ ] AI Cargo Dispatcher
     - [ ] Arty
     - [ ] Designate
-    - [ ] Suppression
+    - [x] Suppression
     - [ ] Warehouse
     - [ ] ATIS
     - [ ] CSAR
