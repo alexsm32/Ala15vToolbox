@@ -9,7 +9,7 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Suppression.html
 --]]
 
-function CreateSuppression(group, debug)
+function CreateSuppression (group, debug)
   local Suppression = SUPPRESSION:New(GROUP:FindByName(group))
   Suppression:SetSuppressionTime(10, 30, 60)
   Suppression:Fallback(false)

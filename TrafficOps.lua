@@ -1,7 +1,7 @@
 --[[
 - @brief      This function will create an ATIS system for the given airport
 -
-- @example    Atis (AIRBASE.Caucasus.Kutaisi, 143.00, "Radio Relay Kutaisi", {263.0, 134.0}, 44, 113.60, 109.75, nil, nil)
+- @example    Atis(AIRBASE.Caucasus.Kutaisi, 143.00, "Radio Relay Kutaisi", {263.0, 134.0}, 44, 113.60, 109.75, nil, nil)
 -
 - @param                    airPort         <Wrapper.Airbase>                              This is the airport
 - @param                    radio           <Float>                                        This is the radio frequency that the relay will use to transmit
@@ -22,16 +22,16 @@ function Atis (airPort, radio, vehicle, freq, tacan, vor, ils, ndbOut, ndbIn)
     local atis = ATIS:New(airPort, radio)
     atis:SetRadioRelayUnitName(vehicle)
     atis:SetTowerFrequencies(freq)
-    if not(isempty(tacan)) then
+    if not(tacan == nil) then
         atis:SetTACAN(tacan)
     end
-    if not(isempty(vor)) then
+    if not(vor == nil) then
         atis:SetVOR(vor)
     end
-    if not(isempty(ils)) then
+    if not(ils == nil) then
         atis:AddILS(ils)
     end
-    if not(isempty(ndbOut) and isempty(ndbIn)) then
+    if not(ndbOut == nil and ndbIn == nil) then
         atis:AddNDBouter(ndbOut)
         atis:AddNDBinner(ndbIn)
     end
@@ -57,7 +57,7 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Rat.html
 --]]
 
-function RandomTraffic(template, skins, iff, invisible, departure, destination, number, startDelay, stopDelay)
+function RandomTraffic (template, skins, iff, invisible, departure, destination, number, startDelay, stopDelay)
     local rat = RAT:New(template):ATC_Messages(false)
     rat:Livery(skins)
     rat:SetDeparture(departure)

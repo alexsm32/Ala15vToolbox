@@ -1,7 +1,7 @@
 --[[
 - @brief      This function will create an AI A2A Dispatcher. NOTE: The AI_A2A_DISPATCHER can be use in many different ways. The way I am offering here is 1 airport = 1 squadron = 1 or more templates
 -
-- @example    myA2A_Dis = A2A_Dispatcher ("HQ", {"AWACS", "EWR"}, "red", "CCCP Border", {Hama = AIRBASE.Syria.Hama, Al_Qusayr = AIRBASE.Syria.Al_Qusayr}, { "SQ CCCP L-39", "SQ CCCP Mig-23", "SQ CCCP Mig-21", "SQ CCCP Mig-29A" }, 20, 0.2, 2, "A2A Dispatcher North")
+- @example    myA2A_Dis = A2A_Dispatcher("HQ", {"AWACS", "EWR"}, "red", "CCCP Border", {Hama = AIRBASE.Syria.Hama, Al_Qusayr = AIRBASE.Syria.Al_Qusayr}, { "SQ CCCP L-39", "SQ CCCP Mig-23", "SQ CCCP Mig-21", "SQ CCCP Mig-29A" }, 20, 0.2, 2, "A2A Dispatcher North")
 -
 - @param      hq            <String>                                    This is the group name of the unit that represent the command center
 - @param      radars        <String>                                    This is the prefix or set of prefixes that will be used to filter the detection groups
