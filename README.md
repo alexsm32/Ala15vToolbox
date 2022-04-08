@@ -3,7 +3,7 @@
 This is a set of functions oriented to help people with low scripting experience using the DCS framework "**Moose**"
 ## Roadmap
 - Basic Functions:
-    - [ ] AI A2A Dispatcher
+    - [x] AI A2A Dispatcher
     - [ ] AI A2G Dispatcher
     - [ ] AI Cargo Dispatcher
     - [ ] Arty
