@@ -10,14 +10,14 @@ This is a set of functions oriented to help people with low scripting experience
     - [ ] Designate
     - [x] Suppression
     - [ ] Warehouse
-    - [ ] ATIS
+    - [x] ATIS
     - [ ] CSAR
     - [ ] CTLD
     - [x] Recovery Tanker
     - [x] Rescue Helo
     - [ ] Spawn
     - [ ] User Flag
-    - [ ] RAT
+    - [x] RAT
 - Advance Functions:
     - [ ] AI A2A Dispatcher
     - [ ] AI A2G Dispatcher
