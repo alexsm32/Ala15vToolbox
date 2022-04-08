@@ -13,8 +13,8 @@ This is a set of functions oriented to help people with low scripting experience
     - [ ] ATIS
     - [ ] CSAR
     - [ ] CTLD
-    - [ ] Recovery Tanker
-    - [ ] Rescue Helo
+    - [x] Recovery Tanker
+    - [x] Rescue Helo
     - [ ] Spawn
     - [ ] User Flag
     - [ ] RAT
