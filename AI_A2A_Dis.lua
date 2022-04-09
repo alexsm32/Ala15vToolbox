@@ -77,7 +77,7 @@ end
 --[[
 - @brief      This function will assign a cap zone to an A2A Dispatcher squadron
 -
-- @example    A2A_Dis_Patrol (myA2A_Dis, "zoneCAP1", "Hama")
+- @example    A2A_Dis_Patrol(myA2A_Dis, "zoneCAP1", "Hama")
 -
 - @param      A2ADispatcher   <AI_A2A_DISPATCHER>    This parameter must be filled with an AI_A2A_DISPATCHER object
 - @param      zone   <String>   This is the name of the CAP zone
