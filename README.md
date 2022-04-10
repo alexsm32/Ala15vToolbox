@@ -7,11 +7,11 @@ This is a set of functions oriented to help people with low scripting experience
 
 ![Moose](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/SetMoose.png)
 
-1. After including Moose, you need to add thoese *Ala15vToolbox functions* you are going to use
+2. After including Moose, you need to add thoese *Ala15vToolbox functions* you are going to use
 
 ![Ala15vToolbox](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/SetAla15vToolbox.png)
 
-1. Now you can use those functions the way you prefere
+3. Now you can use those functions the way you prefere
 
 ![UseIt](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/UseAla15vToolbox.png)
 

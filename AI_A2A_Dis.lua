@@ -20,7 +20,7 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Airbase.html
 --]]
 
-
+-- TODO: see RTB parameters
 function A2A_Dispatcher (hq, radars, coalition, border, airBases, templates, aircrafts, overhead, groupNumber, menuName)
     local HQ_Group = GROUP:FindByName( hq )
     local HQ_CC = COMMANDCENTER:New( HQ_Group, "HQ" )
