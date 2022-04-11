@@ -30,7 +30,7 @@ If something goes wrong, you can get a good hint from the DCS log file in `Saved
     - [x] Suppression
     - [ ] Warehouse
     - [x] ATIS
-    - [ ] CSAR
+    - [x] CSAR
     - [ ] CTLD
     - [x] Recovery Tanker
     - [x] Rescue Helo
