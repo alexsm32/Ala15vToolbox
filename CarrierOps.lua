@@ -13,18 +13,26 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.RecoveryTanker.html
 --]]
 
-function CarrierTanker (carrier, tanker, takeOff, radio, tacan, tacanName)
-    local recoveryTanker = RECOVERYTANKER:New(UNIT:FindByName(carrier), tanker)
-    if takeOff == "air" then
-        recoveryTanker:SetTakeoffAir()
-    elseif takeOff == "hot" then
-        recoveryTanker:SetTakeoffHot()
-    else
-        recoveryTanker:SetTakeoffCold()
+-- TODO: write in dcs.log
+
+function CarrierTanker(carrier, tanker, takeOff, radio, tacan, tacanName)
+    if Unit.getByName(carrier) then -- NOTE: this condition is important for campaings
+        local carrierUnit = UNIT:FindByName(carrier)
+        if carrierUnit:IsAlive() then
+            local recoveryTanker = RECOVERYTANKER:New(carrierUnit, tanker)
+            if takeOff == "air" then
+                recoveryTanker:SetTakeoffAir()
+            elseif takeOff == "hot" then
+                recoveryTanker:SetTakeoffHot()
+            else
+                recoveryTanker:SetTakeoffCold()
+            end
+            recoveryTanker:SetTACAN(tacan, tacanName)
+            recoveryTanker:SetRadio(radio)
+            recoveryTanker:Start()
+        end
+
     end
-    recoveryTanker:SetTACAN(tacan, tacanName)
-    recoveryTanker:SetRadio(radio)
-    recoveryTanker:Start()
 end
 
 --[[
@@ -42,20 +50,26 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.RecoveryTanker.html
 --]]
 
-function CarrierAwacs (carrier, awacs, takeOff, radio, alt, tailnum)
-    local carrierAwacs = RECOVERYTANKER:New(carrier, awacs)
-    carrierAwacs:SetAWACS()
-    carrierAwacs:SetCallsign(CALLSIGN.AWACS.Wizard, tailnum)
-    if takeOff == "air" then
-        carrierAwacs:SetTakeoffAir()
-    elseif takeOff == "hot" then
-        carrierAwacs:SetTakeoffHot()
-    else
-        carrierAwacs:SetTakeoffCold()
+function CarrierAwacs(carrier, awacs, takeOff, radio, alt, tailnum)
+    if Unit.getByName(carrier) then -- NOTE: this condition is important for campaings
+        local carrierUnit = UNIT:FindByName(carrier)
+        if carrierUnit:IsAlive() then
+            local carrierAwacs = RECOVERYTANKER:New(carrier, awacs)
+            carrierAwacs:SetAWACS()
+            carrierAwacs:SetCallsign(CALLSIGN.AWACS.Wizard, tailnum)
+            if takeOff == "air" then
+                carrierAwacs:SetTakeoffAir()
+            elseif takeOff == "hot" then
+                carrierAwacs:SetTakeoffHot()
+            else
+                carrierAwacs:SetTakeoffCold()
+            end
+            carrierAwacs:SetAltitude(alt)
+            carrierAwacs:SetRadio(radio)
+            carrierAwacs:Start()
+        end
+
     end
-    carrierAwacs:SetAltitude(alt)
-    carrierAwacs:SetRadio(radio)
-    carrierAwacs:Start()
 end
 
 --[[
@@ -70,15 +84,21 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.RescueHelo.html
 --]]
 
-function CarrierHeli (carrier, heli, takeOff)
-    local rescueHelo = RESCUEHELO:New(UNIT:FindByName(carrier), heli)
-    if takeOff == "air" then
-        rescueHelo:SetTakeoffAir()
-    elseif takeOff == "hot" then
-        rescueHelo:SetTakeoffHot()
-    else
-        rescueHelo:SetTakeoffCold()
-    end
+function CarrierHeli(carrier, heli, takeOff)
+    if Unit.getByName(carrier) then -- NOTE: this condition is important for campaings
+        local carrierUnit = UNIT:FindByName(carrier)
+        if carrierUnit:IsAlive() then
+            local rescueHelo = RESCUEHELO:New(carrierUnit, heli)
+            if takeOff == "air" then
+                rescueHelo:SetTakeoffAir()
+            elseif takeOff == "hot" then
+                rescueHelo:SetTakeoffHot()
+            else
+                rescueHelo:SetTakeoffCold()
+            end
 
-    rescueHelo:Start()   
+            rescueHelo:Start()
+        end
+
+    end
 end

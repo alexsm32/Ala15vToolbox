@@ -1,7 +1,7 @@
 ![Ala15vLogo](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/LogoALA15V.png)
 # Ala15vToolbox
 ## Introduction
-This is a set of functions oriented to help people with low scripting experience using the DCS framework "**Moose**"
+This is a set of functions oriented to help people with low scripting experience using the DCS framework "**Moose**" (mainly) and others.
 ## How to use it
 1. First, you need to include Moose framework to your mission
 
@@ -21,35 +21,19 @@ If something goes wrong, you can get a good hint from the DCS log file in `Saved
 ![Error](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/ErrorShowCase.png)
 
 ## Roadmap
-- Basic Functions:
-    - [x] AI A2A Dispatcher
+- Moose Modules:
+    - [x] AI A2A Dispatcher `(Campaing Ready)`
     - [ ] AI A2G Dispatcher
     - [ ] AI Cargo Dispatcher
     - [ ] Arty
     - [ ] Designate
     - [x] Suppression
     - [ ] Warehouse
-    - [x] ATIS
+    - [x] ATIS `(Campaing Ready)`
     - [x] CSAR
     - [ ] CTLD
-    - [x] Recovery Tanker
-    - [x] Rescue Helo
+    - [x] Recovery Tanker `(Campaing Ready)`
+    - [x] Rescue Helo `(Campaing Ready)`
     - [ ] Spawn
     - [ ] User Flag
-    - [x] RAT
-- Advance Functions:
-    - [ ] AI A2A Dispatcher
-    - [ ] AI A2G Dispatcher
-    - [ ] AI Cargo Dispatcher
-    - [ ] Arty
-    - [ ] Designate
-    - [ ] Suppression
-    - [ ] Warehouse
-    - [ ] ATIS
-    - [ ] CSAR
-    - [ ] CTLD
-    - [ ] Recovery Tanker
-    - [ ] Rescue Helo
-    - [ ] Spawn
-    - [ ] User Flag
-    - [ ] RAT
+    - [x] RAT `(Campaing Ready)`

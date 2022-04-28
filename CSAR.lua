@@ -17,6 +17,8 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.CSAR.html
 --]]
 
+-- TODO: write in dcs.log
+
 function SetUpCSAR (side, template, medevac, immortal, invisible, autoSmoke, checkDoors, hospitals)
     local my_csar = nil
     if side == "red" then

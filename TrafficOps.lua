@@ -18,26 +18,30 @@
 - @see        https://github.com/FlightControl-Master/MOOSE_SOUND
 --]]
 
-function Atis (airPort, radio, vehicle, freq, tacan, vor, ils, ndbOut, ndbIn)
+-- TODO: write in dcs.log
+
+function Atis(airPort, radio, vehicle, freq, tacan, vor, ils, ndbOut, ndbIn)
     local atis = ATIS:New(airPort, radio)
-    atis:SetRadioRelayUnitName(vehicle)
+    if Group.getByName(vehicle) then    -- NOTE: this condition is important for campaings
+        atis:SetRadioRelayUnitName(vehicle) -- REVIEW: how necessary is this??
+    end
     atis:SetTowerFrequencies(freq)
-    if not(tacan == nil) then
+    -- TODO: simplify conditions
+    if not (tacan == nil) then
         atis:SetTACAN(tacan)
     end
-    if not(vor == nil) then
+    if not (vor == nil) then
         atis:SetVOR(vor)
     end
-    if not(ils == nil) then
+    if not (ils == nil) then
         atis:AddILS(ils)
     end
-    if not(ndbOut == nil and ndbIn == nil) then
+    if not (ndbOut == nil and ndbIn == nil) then
         atis:AddNDBouter(ndbOut)
         atis:AddNDBinner(ndbIn)
     end
     atis:Start()
 end
-
 
 --[[
 - @brief      This function will create random air traffic with the given parameters
@@ -57,7 +61,7 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Rat.html
 --]]
 
-function RandomTraffic (template, skins, iff, invisible, departure, destination, number, startDelay, stopDelay)
+function RandomTraffic(template, skins, iff, invisible, departure, destination, number, startDelay, stopDelay)
     local rat = RAT:New(template):ATC_Messages(false)
     rat:Livery(skins)
     rat:SetDeparture(departure)
@@ -69,7 +73,7 @@ function RandomTraffic (template, skins, iff, invisible, departure, destination,
     if iff then
         rat:SetEPLRS(true)
     end
-    local manager=RATMANAGER:New(number) --REVIEW
+    local manager = RATMANAGER:New(number) --REVIEW
     manager:Add(rat, number)
     manager:Start(startDelay)
     manager:Stop(stopDelay)

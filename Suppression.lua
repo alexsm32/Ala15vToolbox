@@ -9,6 +9,8 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Suppression.html
 --]]
 
+-- TODO: write in dcs.log
+
 function CreateSuppression (group, debug)
   local Suppression = SUPPRESSION:New(GROUP:FindByName(group))
   Suppression:SetSuppressionTime(10, 30, 60)
