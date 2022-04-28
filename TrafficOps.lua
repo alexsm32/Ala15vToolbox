@@ -56,7 +56,7 @@ end
 - @param        destination         <String>            This is the airport name or set of airport names where the aircraft is landing
 - @param        number              <Integer>           This is the total number of aircrafts that will fly at same time
 - @param        startDelay          <Integer>           This is the number of seconds before start
-- @param        stopDelay           <Integer>           This is the airport number of seconds before stop
+- @param        stopDelay           <Integer>           This is the number of seconds before stop
 
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Rat.html
 --]]
