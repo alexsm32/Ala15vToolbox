@@ -67,7 +67,8 @@ function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, airc
 
             for name, airBase in pairs(airBases) do
                 -- FIXED: check if airport is controlled by the coalition
-                -- TODO: check if this works with carriers or heliports
+                -- TODO: check if this works with carriers or heliports and add some extra condition
+                -- TODO: use the model from AI_A2G_dis.lua
                 if AIRBASE:FindByName(airBase):GetCoalitionName():lower() == coalition then -- NOTE: this condition is important for campaings
                     -- Setup the squadrons.
                     A2ADispatcher:SetSquadron(name, airBase, templates, aircrafts)
