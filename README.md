@@ -23,7 +23,7 @@ If something goes wrong, you can get a good hint from the DCS log file in `Saved
 ## Roadmap
 - Moose Modules:
     - [x] AI A2A Dispatcher `(Campaing Ready)`
-    - [ ] AI A2G Dispatcher
+    - [x] AI A2G Dispatcher `(Under testing)`
     - [ ] AI Cargo Dispatcher
     - [ ] Arty
     - [ ] Designate
