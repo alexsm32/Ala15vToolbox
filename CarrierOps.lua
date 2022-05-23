@@ -15,25 +15,38 @@
 
 -- TODO: write in dcs.log
 
+env.info("ALA15vToolBox CarrierTanker declaration")
 function CarrierTanker(carrier, tanker, takeOff, radio, tacan, tacanName)
+    env.info("ALA15vToolBox CarrierTanker function: Checking if the unit, " .. carrier .. ", exists in the mission")
     if Unit.getByName(carrier) then -- NOTE: this condition is important for campaings
         local carrierUnit = UNIT:FindByName(carrier)
+        env.info("ALA15vToolBox CarrierTanker function: Checking if the unit, " .. carrier .. ", is alive")
         if carrierUnit:IsAlive() then
-            local recoveryTanker = RECOVERYTANKER:New(carrierUnit, tanker)
-            if takeOff == "air" then
-                recoveryTanker:SetTakeoffAir()
-            elseif takeOff == "hot" then
-                recoveryTanker:SetTakeoffHot()
+            env.info("ALA15vToolBox CarrierTanker function: Checking if the group, " .. tanker .. ", exists in the mission")
+            if Group.getByName(tanker) then
+                local recoveryTanker = RECOVERYTANKER:New(carrierUnit, tanker)
+                if takeOff == "air" then
+                    recoveryTanker:SetTakeoffAir()
+                elseif takeOff == "hot" then
+                    recoveryTanker:SetTakeoffHot()
+                else
+                    recoveryTanker:SetTakeoffCold()
+                end
+                recoveryTanker:SetTACAN(tacan, tacanName)
+                recoveryTanker:SetRadio(radio)
+                recoveryTanker:Start()
             else
-                recoveryTanker:SetTakeoffCold()
+                env.error("ALA15vToolBox CarrierTanker function: The group, " .. tanker .. ", does not exist in the mission")
             end
-            recoveryTanker:SetTACAN(tacan, tacanName)
-            recoveryTanker:SetRadio(radio)
-            recoveryTanker:Start()
+        else
+            env.warning("ALA15vToolBox CarrierTanker function: The unit, " .. carrier .. ", is not alive")
         end
-
+    else
+        env.error("ALA15vToolBox CarrierTanker function: The unit " .. carrier .. " does not exist")
     end
 end
+
+env.info("ALA15vToolBox CarrierTanker declaration done")
 
 --[[
 - @brief      This function will create an awacs that will orbit around the carrier offering information of contacts
@@ -50,27 +63,40 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.RecoveryTanker.html
 --]]
 
+env.info("ALA15vToolBox CarrierAwacs declaration")
 function CarrierAwacs(carrier, awacs, takeOff, radio, alt, tailnum)
+    env.info("ALA15vToolBox CarrierAwacs function: Checking if the unit, " .. carrier .. ", exists in the mission")
     if Unit.getByName(carrier) then -- NOTE: this condition is important for campaings
         local carrierUnit = UNIT:FindByName(carrier)
+        env.info("ALA15vToolBox CarrierAwacs function: Checking if the unit, " .. carrier .. ", is alive")
         if carrierUnit:IsAlive() then
-            local carrierAwacs = RECOVERYTANKER:New(carrier, awacs)
-            carrierAwacs:SetAWACS()
-            carrierAwacs:SetCallsign(CALLSIGN.AWACS.Wizard, tailnum)
-            if takeOff == "air" then
-                carrierAwacs:SetTakeoffAir()
-            elseif takeOff == "hot" then
-                carrierAwacs:SetTakeoffHot()
+            env.info("ALA15vToolBox CarrierAwacs function: Checking if the group, " .. awacs .. ", exists in the mission")
+            if Group.getByName(awacs) then
+                local carrierAwacs = RECOVERYTANKER:New(carrier, awacs)
+                carrierAwacs:SetAWACS()
+                carrierAwacs:SetCallsign(CALLSIGN.AWACS.Wizard, tailnum)
+                if takeOff == "air" then
+                    carrierAwacs:SetTakeoffAir()
+                elseif takeOff == "hot" then
+                    carrierAwacs:SetTakeoffHot()
+                else
+                    carrierAwacs:SetTakeoffCold()
+                end
+                carrierAwacs:SetAltitude(alt)
+                carrierAwacs:SetRadio(radio)
+                carrierAwacs:Start()
             else
-                carrierAwacs:SetTakeoffCold()
+                env.error("ALA15vToolBox CarrierAwacs function: The group, " .. awacs .. ", does not exist in the mission")
             end
-            carrierAwacs:SetAltitude(alt)
-            carrierAwacs:SetRadio(radio)
-            carrierAwacs:Start()
+        else
+            env.warning("ALA15vToolBox CarrierAwacs function: The unit, " .. carrier .. ", is not alive")
         end
-
+    else
+        env.error("ALA15vToolBox CarrierAwacs function: The unit " .. carrier .. " does not exist")
     end
 end
+
+env.info("ALA15vToolBox CarrierAwacs declaration done")
 
 --[[
 - @brief      This function will create a rescue helicopter that will follow the carrier
@@ -84,21 +110,34 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.RescueHelo.html
 --]]
 
+env.info("ALA15vToolBox CarrierHeli declaration")
 function CarrierHeli(carrier, heli, takeOff)
+    env.info("ALA15vToolBox CarrierHeli function: Checking if the unit, " .. carrier .. ", exists in the mission")
     if Unit.getByName(carrier) then -- NOTE: this condition is important for campaings
         local carrierUnit = UNIT:FindByName(carrier)
+        env.info("ALA15vToolBox CarrierHeli function: Checking if the unit, " .. carrier .. ", is alive")
         if carrierUnit:IsAlive() then
-            local rescueHelo = RESCUEHELO:New(carrierUnit, heli)
-            if takeOff == "air" then
-                rescueHelo:SetTakeoffAir()
-            elseif takeOff == "hot" then
-                rescueHelo:SetTakeoffHot()
+            env.info("ALA15vToolBox CarrierHeli function: Checking if the group, " .. heli .. ", exists in the mission")
+            if Group.getByName(heli) then
+                local rescueHelo = RESCUEHELO:New(carrierUnit, heli)
+                if takeOff == "air" then
+                    rescueHelo:SetTakeoffAir()
+                elseif takeOff == "hot" then
+                    rescueHelo:SetTakeoffHot()
+                else
+                    rescueHelo:SetTakeoffCold()
+                end
+
+                rescueHelo:Start()
             else
-                rescueHelo:SetTakeoffCold()
+                env.error("ALA15vToolBox CarrierHeli function: The group, " .. heli .. ", does not exist in the mission")
             end
-
-            rescueHelo:Start()
+        else
+            env.warning("ALA15vToolBox CarrierHeli function: The unit, " .. carrier .. ", is not alive")
         end
-
+    else
+        env.error("ALA15vToolBox CarrierHeli function: The unit " .. carrier .. " does not exist")
     end
 end
+
+env.info("ALA15vToolBox CarrierHeli declaration done")

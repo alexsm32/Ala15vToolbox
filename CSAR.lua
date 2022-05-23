@@ -17,9 +17,9 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.CSAR.html
 --]]
 
--- TODO: write in dcs.log
-
-function SetUpCSAR (side, template, medevac, immortal, invisible, autoSmoke, checkDoors, hospitals)
+env.info("ALA15vToolBox SetUpCSAR declaration")
+function SetUpCSAR(side, template, medevac, immortal, invisible, autoSmoke, checkDoors, hospitals)
+    env.info("ALA15vToolBox SetUpCSAR function: Initializing CSAR ")
     local my_csar = nil
     if side == "red" then
         my_csar = CSAR:New(coalition.side.RED, template)
@@ -27,7 +27,7 @@ function SetUpCSAR (side, template, medevac, immortal, invisible, autoSmoke, che
         my_csar = CSAR:New(coalition.side.BLUE, template)
     end
     -- options
-    my_csar.useprefix = true  -- Requires CSAR helicopter #GROUP names to have the prefix(es) defined below.
+    my_csar.useprefix = true -- Requires CSAR helicopter #GROUP names to have the prefix(es) defined below.
     my_csar.csarPrefix = medevac -- #GROUP name prefixes used for useprefix=true - DO NOT use # in helicopter names in the Mission Editor!
     my_csar.immortalcrew = immortal -- downed pilot spawn is immortal
     my_csar.invisiblecrew = invisible -- downed pilot spawn is visible
@@ -36,11 +36,14 @@ function SetUpCSAR (side, template, medevac, immortal, invisible, autoSmoke, che
     my_csar.autosmokedistance = 1000 -- distance for autosmoke
     my_csar.pilotRuntoExtractPoint = true -- Downed pilot will run to the rescue helicopter up to self.extractDistance in meters.
     my_csar.extractDistance = 500 -- Distance the downed pilot will start to run to the rescue helicopter.
-    if not(hospitals == nil) then
+    if not (hospitals == nil) then
         my_csar.mashprefix = hospitals -- prefixes of #GROUP objects used as MASHes.
     end
     my_csar.pilotmustopendoors = checkDoors -- switch to true to enable check of open doors
 
     -- start the FSM
     my_csar:__Start(5)
+    env.info("ALA15vToolBox SetUpCSAR function: CSAR Initialized")
 end
+
+env.info("ALA15vToolBox SetUpCSAR declaration done")

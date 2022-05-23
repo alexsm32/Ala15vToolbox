@@ -18,12 +18,16 @@
 - @see        https://github.com/FlightControl-Master/MOOSE_SOUND
 --]]
 
--- TODO: write in dcs.log
 
+env.info("ALA15vToolBox Atis declaration")
 function Atis(airPort, radio, vehicle, freq, tacan, vor, ils, ndbOut, ndbIn)
+    env.info("ALA15vToolBox Atis function: Initializing Atis for the airport " .. airPort)
     local atis = ATIS:New(airPort, radio)
+    env.info("ALA15vToolBox Atis function: Checking if the group, " .. vehicle .. ", exists in the mission")
     if Group.getByName(vehicle) then    -- NOTE: this condition is important for campaings
         atis:SetRadioRelayUnitName(vehicle) -- REVIEW: how necessary is this??
+    else
+        env.warning("ALA15vToolBox Atis function: The group " .. vehicle .. " does not exist")
     end
     atis:SetTowerFrequencies(freq)
     -- TODO: simplify conditions
@@ -41,7 +45,9 @@ function Atis(airPort, radio, vehicle, freq, tacan, vor, ils, ndbOut, ndbIn)
         atis:AddNDBinner(ndbIn)
     end
     atis:Start()
+    env.info("ALA15vToolBox Atis function: Atis Initialized")
 end
+env.info("ALA15vToolBox Atis declaration done")
 
 --[[
 - @brief      This function will create random air traffic with the given parameters
@@ -61,7 +67,9 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Functional.Rat.html
 --]]
 
+env.info("ALA15vToolBox RandomTraffic declaration")
 function RandomTraffic(template, skins, iff, invisible, departure, destination, number, startDelay, stopDelay)
+    env.info("ALA15vToolBox RandomTraffic function: Initializing RAT ")
     local rat = RAT:New(template):ATC_Messages(false)
     rat:Livery(skins)
     rat:SetDeparture(departure)
@@ -77,4 +85,6 @@ function RandomTraffic(template, skins, iff, invisible, departure, destination, 
     manager:Add(rat, number)
     manager:Start(startDelay)
     manager:Stop(stopDelay)
+    env.info("ALA15vToolBox RandomTraffic function: RAT Initialized")
 end
+env.info("ALA15vToolBox RandomTraffic declaration done")

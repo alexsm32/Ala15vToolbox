@@ -20,12 +20,14 @@
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Airbase.html
 --]]
 
--- TODO: write in dcs.log
 
+env.info("ALA15vToolBox A2A_Dispatcher declaration")
 function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, aircrafts, overhead, groupNumber, menuName)
+    env.info("ALA15vToolBox A2A_Dispatcher function: Checking if the group, " .. hq .. ", exists in the mission")
     -- FIXED: null error when the group doesn't exist
     if Group.getByName(hq) then -- NOTE: this condition is important for campaings
         local HQ_Group = GROUP:FindByName(hq)
+        env.info("ALA15vToolBox A2A_Dispatcher function: Checking if the group, " .. hq .. ", is alive")
         -- FIXED: check if command center group is alive
         if HQ_Group:IsAlive() then
             local HQ_CC = COMMANDCENTER:New(HQ_Group, "HQ")
@@ -52,8 +54,13 @@ function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, airc
             -- Initialize the dispatcher, setting up a border zone. This is a polygon,
             -- which takes the waypoints of a late activated group with the name CCCP Border as the boundaries of the border area.
             -- Any enemy crossing this border will be engaged.
-            local CCCPBorderZone = ZONE_POLYGON:New(border, GROUP:FindByName(border))
-            A2ADispatcher:SetBorderZone(CCCPBorderZone)
+            env.info("ALA15vToolBox A2A_Dispatcher function: Checking if the group, " .. border .. ", exists in the mission")
+            if Group.getByName(border) then
+                local CCCPBorderZone = ZONE_POLYGON:New(border, GROUP:FindByName(border))
+                A2ADispatcher:SetBorderZone(CCCPBorderZone)
+            else
+                env.warning("ALA15vToolBox A2A_Dispatcher function: The group, " .. border .. ", does not exist in the mission")
+            end
 
             -- Initialize the dispatcher, setting up a radius of 100km where any airborne friendly
             -- without an assignment within 100km radius from a detected target, will engage that target.
@@ -65,10 +72,13 @@ function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, airc
             -- Now Setup the default damage threshold.
             A2ADispatcher:SetDefaultDamageThreshold(0.50)
 
+            env.info("ALA15vToolBox A2A_Dispatcher function: Adding squadrons")
             for name, airBase in pairs(airBases) do
                 -- FIXED: check if airport is controlled by the coalition
                 -- TODO: check if this works with carriers or heliports and add some extra condition
                 -- TODO: use the model from AI_A2G_dis.lua
+                -- TODO: add condition to check if templates exists
+                env.info("ALA15vToolBox A2A_Dispatcher function: Checking if the airbase belongs to the coalition " .. coalition)
                 if AIRBASE:FindByName(airBase):GetCoalitionName():lower() == coalition then -- NOTE: this condition is important for campaings
                     -- Setup the squadrons.
                     A2ADispatcher:SetSquadron(name, airBase, templates, aircrafts)
@@ -85,16 +95,24 @@ function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, airc
                     -- Set the language of the squadrons to Russian.
                     A2ADispatcher:SetSquadronLanguage(name, "RU")
                     A2ADispatcher:SetSquadronRadioFrequency(name, 127.5)
+                else
+                    env.warning("ALA15vToolBox A2A_Dispatcher function: The airbase does not belong to the coalition " .. coalition)
                 end
-
             end
+            env.info("ALA15vToolBox A2A_Dispatcher function: All the squadrons added")
 
+            env.info("ALA15vToolBox A2A_Dispatcher function: Returning A2ADispatcher")
             return A2ADispatcher
-
+        else
+            env.warning("ALA15vToolBox A2A_Dispatcher function: The group, " .. hq .. ", is not alive")
         end
-
+    else
+        env.error("ALA15vToolBox A2A_Dispatcher function: The group " .. hq .. " does not exist")
     end
 end
+
+env.info("ALA15vToolBox A2A_Dispatcher declaration done")
+
 
 --[[
 - @brief      This function will assign a cap zone to an A2A Dispatcher squadron
@@ -108,11 +126,22 @@ end
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/AI.AI_A2A_Dispatcher.html
 --]]
 
--- REVIEW: condition not tested
+env.info("ALA15vToolBox A2A_Dis_Patrol declaration")
+-- FIXED: needed condition to check if squadron exists
 function A2A_Dis_Patrol(A2ADispatcher, zone, squadron)
-    if A2ADispatcher then   -- NOTE: this condition is important for campaings
-        local CAPZone = ZONE:New(zone)
-        A2ADispatcher:SetSquadronCap(squadron, CAPZone, 6000, 10000, 600, 800, 800, 1200, "BARO")
-        A2ADispatcher:SetSquadronCapInterval(squadron, 1, 180, 600, 1)
+    env.info("ALA15vToolBox A2A_Dis_Patrol function: Checking if the dispatcher exists")
+    if A2ADispatcher then -- NOTE: this condition is important for campaings
+        env.info("ALA15vToolBox A2A_Dis_Patrol function: Checking if the squadron, " .. squadron .. ", exists")
+        if A2ADispatcher.DefenderSquadrons[squadron] then   -- NOTE: this condition is important for campaings
+            local CAPZone = ZONE:New(zone)
+            A2ADispatcher:SetSquadronCap(squadron, CAPZone, 6000, 10000, 600, 800, 800, 1200, "BARO")
+            A2ADispatcher:SetSquadronCapInterval(squadron, 1, 180, 600, 1)
+        else
+            env.error("ALA15vToolBox A2A_Dis_Patrol function: The squadron does not exists")
+        end
+    else
+        env.error("ALA15vToolBox A2A_Dis_Patrol function: The dispatcher does not exists")
     end
 end
+
+env.info("ALA15vToolBox A2A_Dis_Patrol declaration done")
