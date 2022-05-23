@@ -20,6 +20,14 @@ If something goes wrong, you can get a good hint from the DCS log file in `Saved
 
 ![Error](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/ErrorShowCase.png)
 
+The functions also write logs in this file. Those logs can be useful to narrow the problem.
+
+![Logs](https://github.com/alexsm32/Ala15vToolbox/blob/documentation/img/LogsShowCase.png)
+
+- **Info**: shows how is proceeding the functions.
+- **Warning**: shows issues that can modify the normal behaviour of the function. Those could be normal for campaings. But in normal missions, the editor should take a look and apply changes.
+- **Error**: shows critical issues that will stop the function. In some cases, those could be normal for campaings. But in normal missions, the editor **must** take a look and apply changes.
+
 ## Roadmap
 - Moose Modules:
     - [x] AI A2A Dispatcher `(Campaing Ready)`
@@ -28,7 +36,7 @@ If something goes wrong, you can get a good hint from the DCS log file in `Saved
     - [ ] Arty
     - [ ] Designate
     - [x] Suppression
-    - [ ] Warehouse
+    - [x] Warehouse (WIP) `(Campaing Ready)`
     - [x] ATIS `(Campaing Ready)`
     - [x] CSAR
     - [ ] CTLD
