@@ -88,3 +88,5 @@ function RandomTraffic(template, skins, iff, invisible, departure, destination, 
     env.info("ALA15vToolBox RandomTraffic function: RAT Initialized")
 end
 env.info("ALA15vToolBox RandomTraffic declaration done")
+
+Ala15vToolBoxTrafficOpsLoaded = true    -- In case it is needed to check if this module is loaded

@@ -191,3 +191,5 @@ function A2G_Dis_SeadPatrol(A2GDispatcher, zone, squadron)
 end
 
 env.info("ALA15vToolBox A2G_Dis_SeadPatrol declaration done")
+
+Ala15vToolBoxAIA2GDisLoaded = true  -- In case it is needed to check if this module is loaded

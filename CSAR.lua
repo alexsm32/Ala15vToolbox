@@ -47,3 +47,5 @@ function SetUpCSAR(side, template, medevac, immortal, invisible, autoSmoke, chec
 end
 
 env.info("ALA15vToolBox SetUpCSAR declaration done")
+
+Ala15vToolBoxCSARLoaded = true    -- In case it is needed to check if this module is loaded

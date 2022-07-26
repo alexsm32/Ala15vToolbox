@@ -75,3 +75,6 @@ function NewWarehouse(wh, coalition, assets, spZone, autoDefence)
 end
 
 env.info("ALA15vToolBox NewWarehouse declaration done")
+
+
+Ala15vToolBoxWarehouseLoaded = true    -- In case it is needed to check if this module is loaded

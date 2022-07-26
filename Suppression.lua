@@ -28,3 +28,5 @@ function CreateSuppression(group, debug)
 end
 
 env.info("ALA15vToolBox CreateSuppression declaration done")
+
+Ala15vToolBoxSuppressionLoaded = true    -- In case it is needed to check if this module is loaded

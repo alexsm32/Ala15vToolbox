@@ -150,3 +150,5 @@ function A2A_Dis_Patrol(A2ADispatcher, zone, squadron)
 end
 
 env.info("ALA15vToolBox A2A_Dis_Patrol declaration done")
+
+Ala15vToolBoxAIA2ADisLoaded = true  -- In case it is needed to check if this module is loaded

@@ -141,3 +141,5 @@ function CarrierHeli(carrier, heli, takeOff)
 end
 
 env.info("ALA15vToolBox CarrierHeli declaration done")
+
+Ala15vToolBoxCarrierOpsLoaded = true    -- In case it is needed to check if this module is loaded
