@@ -1,11 +1,12 @@
 --[[
 - @brief      This function will create an AI A2A Dispatcher. NOTE: The AI_A2A_DISPATCHER can be use in many different ways. The way I am offering here is 1 airport = 1 squadron = 1 or more templates
 -
-- @example  --REVIEW    myA2A_Dis = A2A_Dispatcher("HQ", {"AWACS", "EWR"}, "red", "CCCP Border", {Lar = "Lar", Shiraz = "Shiraz Intl", BandarEJask = "Bandar-e-Jask"}, { "SQ CCCP L-39", "SQ CCCP Mig-23", "SQ CCCP Mig-21", "SQ CCCP Mig-29A" }, 20, 0.2, 2, "A2A Dispatcher North")
+- @example  --REVIEW    myA2A_Dis = A2A_Dispatcher("HQ", {"AWACS", "EWR"}, "red", false, "CCCP Border", {Lar = "Lar", Shiraz = "Shiraz Intl", BandarEJask = "Bandar-e-Jask"}, { "SQ CCCP L-39", "SQ CCCP Mig-23", "SQ CCCP Mig-21", "SQ CCCP Mig-29A" }, 20, 0.2, 2, "A2A Dispatcher North")
 -
 - @param      hq            <String>                                    This is the group name of the unit that represent the command center
 - @param      radars        <String>                                    This is the prefix or set of prefixes that will be used to filter the detection groups
 - @param      coalition     <String>      {OPTIONS: "blue", "red"}      This is the coalition side that the detection group filter will focus on
+- @param      filter        <Boolean>                                   If true, only airplanes will be detected (not helicopters)
 - @param      border        <String>                                    This is the group name of the unit with the route that represent the dispatcher border
 - @param      airBases      <Key = AirbaseName>    -NOTE: the key is the squadron name and it contains the airport name      This is the set of squadrons and airports available for the dispatcher  --REVIEW
 - @param      templates     <String>                                    This is the group name or set of group names of the template/s
@@ -22,7 +23,7 @@
 
 
 env.info("ALA15vToolBox A2A_Dispatcher declaration")
-function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, aircrafts, overhead, groupNumber, menuName)
+function A2A_Dispatcher(hq, radars, coalition, filter, border, airBases, templates, aircrafts, overhead, groupNumber, menuName)
     env.info("ALA15vToolBox A2A_Dispatcher function: Checking if the group, " .. hq .. ", exists in the mission")
     -- FIXED: null error when the group doesn't exist
     if Group.getByName(hq) then -- NOTE: this condition is important for campaings
@@ -41,6 +42,10 @@ function A2A_Dispatcher(hq, radars, coalition, border, airBases, templates, airc
 
             -- TODO: check if DetectionSetGroup:CountAlive() > 0 condition is necessary
             local Detection = DETECTION_AREAS:New(DetectionSetGroup, 100000)
+            if filter then
+                env.info("ALA15vToolBox A2A_Dispatcher function: Airplane filter activated")
+                Detection:FilterCategories(Unit.Category.AIRPLANE)
+            end
 
             -- FIXED: check if command center and DetectionSetGroup exist
             -- Setup the A2A dispatcher, and initialize it.
@@ -140,7 +145,7 @@ function A2A_Dis_Patrol(A2ADispatcher, zone, squadron)
             env.error("ALA15vToolBox A2A_Dis_Patrol function: The squadron does not exists")
         end
     else
-        env.error("ALA15vToolBox A2A_Dis_Patrol function: The dispatcher does not exists")
+        env.error("ALA15vToolBox A2A_Dis_Patrol function: The dispatcher does not exist")
     end
 end
 

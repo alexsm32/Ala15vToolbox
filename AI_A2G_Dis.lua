@@ -153,7 +153,7 @@ function A2G_Dis_CasPatrol(A2GDispatcher, zone, squadron)
             env.error("ALA15vToolBox A2G_Dis_CasPatrol function: The squadron does not exists")
         end
     else
-        env.error("ALA15vToolBox A2G_Dis_CasPatrol function: The dispatcher does not exists")
+        env.error("ALA15vToolBox A2G_Dis_CasPatrol function: The dispatcher does not exist")
     end
 end
 
@@ -186,7 +186,7 @@ function A2G_Dis_SeadPatrol(A2GDispatcher, zone, squadron)
             env.error("ALA15vToolBox A2G_Dis_SeadPatrol function: The squadron does not exists")
         end
     else
-        env.error("ALA15vToolBox A2G_Dis_SeadPatrol function: The dispatcher does not exists")
+        env.error("ALA15vToolBox A2G_Dis_SeadPatrol function: The dispatcher does not exist")
     end
 end
 
