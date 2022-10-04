@@ -142,8 +142,8 @@ env.info("ALA15vToolBox NewWarehouseSelfReq declaration done")
 --[[
 - @brief      This function will detect all the static object with the given prefix and will create a full warehouse system for each static object found.
 -
-- @example    WarehouseAutoGen("wh", "whz", nil, "blue", {T90={number=20, type=nil}, Mi8={number=10, type=WAREHOUSE.Attribute.AIR_TRANSPORTHELO}}, 10000, false, true)
-- @example    WarehouseAutoGen("wh", "whz", nil, "blue", {T90={number=20, type=nil}, Ka50={number=15, type=nil}}, 1500, false, true)
+- @example    WarehouseAutoGen("wh", "whz", "blue", {T90={number=20, type=nil}, Mi8={number=10, type=WAREHOUSE.Attribute.AIR_TRANSPORTHELO}}, 10000, false, true)
+- @example    WarehouseAutoGen("wh", "whz", "blue", {T90={number=20, type=nil}, Ka50={number=15, type=nil}}, 1500, false, true)
 -
 - @param        whPrefix            <String>                                      This is the prefix of the structures that will be detected as warehouses
 - @param        zPrefix             <String>    -NOTE: it should accept a table   This is the prefix of the zones that the warehouses will try to control
@@ -161,7 +161,7 @@ env.info("ALA15vToolBox NewWarehouseSelfReq declaration done")
 -- NOTE: WIP
 -- ANCHOR: WarehouseAutoGen
 env.info("ALA15vToolBox WarehouseAutoGen declaration")
--- WarehouseAutoGen("wh", "wh", nil, "blue", TEST, 500, false, true)
+-- WarehouseAutoGen("wh", "wh", "blue", TEST, 500, false, true)
 function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, selfDefense, selfReqMenu)
     -- SECTION: databases
     local DBObject = SET_STATIC:New()
