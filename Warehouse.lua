@@ -20,6 +20,7 @@ end
 - @param        assets              <Key=Integer,WAREHOUSE.Attribute>             This is the set of assets that will be added to the warehouse  -NOTE: the key is the group name (NO SPACES) of the template and it contains the total number assets added to the warehouse and the type
 - @param        spZone              <String>    -NOTE: if not used type " nil "   This is the name of zone used by the warehouse as default spawn zone
 - @param        defZone             <String>    -NOTE: if not used type " nil "   This is the name of zone used by the warehouse as selfdefend zone for triggering the event OnAfterAttacked
+- @param        portZone            <String>    -NOTE: if not used type " nil "   This is the name of zone used by the warehouse as port zone for spawning ships
 - @param        selfReqMenu         <Boolean>   -NOTE: Util.lua function needed   If true, a new radio menu will be created with radio commands to request units from that warehouse
 -
 - @return   warehouse   <WAREHOUSE>     The function return the hole WAREHOUSE object
@@ -29,7 +30,7 @@ end
 
 -- ANCHOR: NewWarehouse
 env.info("ALA15vToolBox NewWarehouse declaration")
-function NewWarehouse(wh, coalition, assets, spZone, defZone, selfReqMenu)
+function NewWarehouse(wh, coalition, assets, spZone, defZone, portZone, selfReqMenu)
     env.info("ALA15vToolBox NewWarehouse function: Checking if the warehouse, " .. wh .. ", exists in the mission")
     if StaticObject.getByName(wh) then
         local whObj = STATIC:FindByName(wh)
@@ -99,6 +100,18 @@ function NewWarehouse(wh, coalition, assets, spZone, defZone, selfReqMenu)
                         env.info("ALA15vToolBox NewWarehouse function: Adding defended zone, " ..
                             defZone:GetName() .. " to the warehouse")
                         warehouse:SetWarehouseZone(defZone)
+                    end
+                end
+
+                if portZone then
+                    if type(portZone) == "string" then
+                        env.info("ALA15vToolBox NewWarehouse function: Adding port zone, " ..
+                            portZone .. " to the warehouse")
+                        warehouse:SetPortZone(ZONE:New(portZone))
+                    else
+                        env.info("ALA15vToolBox NewWarehouse function: Adding port zone, " ..
+                            portZone:GetName() .. " to the warehouse")
+                        warehouse:SetPortZone(portZone)
                     end
                 end
 
@@ -179,8 +192,13 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
 
     local DBspZone
     DBspZone = SET_ZONE:New()
-    DBspZone:FilterPrefixes("spzone") -- TODO: hardcode this. Acepting parameter make no sense.
+    DBspZone:FilterPrefixes("spzone")
     DBspZone:FilterOnce()
+
+    local DBportZone
+    DBportZone = SET_ZONE:New()
+    DBportZone:FilterPrefixes("portzone")
+    DBportZone:FilterOnce()
 
 
     -- !SECTION
@@ -231,6 +249,15 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
         env.info("ALA15vToolBox WarehouseAutoGen: The amount of spawn zones filtering by prefix, spzone, is equal to " ..
             DBspZone:Count())
     end
+
+    -- DBportZone
+    if DBportZone:Count() < 1 then
+        env.warning("ALA15vToolBox WarehouseAutoGen: The amount of port zones filtering by prefix, portzone, is equal to "
+            .. DBportZone:Count())
+    else
+        env.info("ALA15vToolBox WarehouseAutoGen: The amount of port zones filtering by prefix, portzone, is equal to "
+            .. DBportZone:Count())
+    end
     -- !SECTION
 
     for _, static in pairs(DBObject:GetSet()) do
@@ -276,9 +303,19 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                     static:GetName())
             end
 
+            local portZone = nil
+            for _, zone in pairs(DBportZone:GetSet()) do
+                if UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < 10000 then   -- REVIEW: Distance
+                    portZone = zone:GetName()
+                    env.info("ALA15vToolBox WarehouseAutoGen: Selected port zone, " ..
+                    portZone .. ", for the warehouse, " ..
+                        static:GetName())
+                end
+            end
+
             env.info("ALA15vToolBox WarehouseAutoGen: Running NewWarehouse() function for the static, " ..
                 static:GetName())
-            local warehouse = NewWarehouse(static:GetName(), coalition, templates, spawn, defZone, selfReqMenu)
+            local warehouse = NewWarehouse(static:GetName(), coalition, templates, spawn, defZone, portZone, selfReqMenu)
 
             -- SECTION: OnAfterSelfRequest event
             -- TODO: do magic with the infantry
@@ -398,6 +435,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
 
             -- SECTION: SelfRequest
             for _, zone in pairs(DBZone:GetSet()) do
+                local zoneSurfaceType = zone:GetSurfaceType()
                 zone:Scan({ Object.Category.UNIT }, { Unit.Category.GROUND_UNIT })
                 local IsOccupied = true --REVIEW
                 if coalition == "blue" then
@@ -406,7 +444,9 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                     IsOccupied = zone:IsNoneInZoneOfCoalition(1)
                 end
                 -- TODO: DYNAMIC LIST
-                if (UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < coverRange) and IsOccupied then -- this check if the zone is in the cover range of the warehouse and if there are units of the coalition
+                if (UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < coverRange) and
+                    not (zoneSurfaceType == land.SurfaceType.SHALLOW_WATER or zoneSurfaceType == land.SurfaceType.WATER)
+                    and IsOccupied then -- this check if the zone is in the cover range of the warehouse, if the zone is on the water and if there are units of the coalition
                     warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_INFANTRY,
                         1, nil, nil, nil, zone:GetName())
                     warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_APC, 1,
@@ -417,6 +457,18 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                         nil, nil, nil, zone:GetName())
                     warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_AAA, 1,
                         nil, nil, nil, zone:GetName())
+                elseif (UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < coverRange) and
+                    (zoneSurfaceType == land.SurfaceType.SHALLOW_WATER or zoneSurfaceType == land.SurfaceType.WATER) and
+                    IsOccupied then
+                    if zoneSurfaceType == land.SurfaceType.SHALLOW_WATER then
+                        warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
+                            WAREHOUSE.Attribute.NAVAL_OTHER, 2, nil, nil, nil, zone:GetName())
+                    else
+                        warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
+                            WAREHOUSE.Attribute.NAVAL_WARSHIP,
+                            1, nil, nil, nil, zone:GetName())
+                        --warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 1, nil, nil, nil, zone:GetName())
+                    end
                 end
             end
             -- !SECTION
