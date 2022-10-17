@@ -167,20 +167,20 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
     local DBObject = SET_STATIC:New()
     DBObject:FilterCoalitions(coalition)
     DBObject:FilterPrefixes(whPrefix)
-    DBObject:FilterStart()
+    DBObject:FilterOnce()
 
     DBdefZone = SET_ZONE:New()
     DBdefZone:FilterPrefixes("defzone")
-    DBdefZone:FilterStart()
+    DBdefZone:FilterOnce()
 
     local DBZone = SET_ZONE:New()
     DBZone:FilterPrefixes(zPrefix)
-    DBZone:FilterStart()
+    DBZone:FilterOnce()
 
     local DBspZone
     DBspZone = SET_ZONE:New()
     DBspZone:FilterPrefixes("spzone") -- TODO: hardcode this. Acepting parameter make no sense.
-    DBspZone:FilterStart()
+    DBspZone:FilterOnce()
 
 
     -- !SECTION
@@ -377,7 +377,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                         else
                             DBDef:FilterZones({ defZone }) -- FIXED: zone in table
                         end
-                        DBDef:FilterStart()
+                        DBDef:FilterOnce()
 
                         if DBDef:Count() > 3 then -- REVIEW: possible parameter??
                             IsDefended = true
@@ -390,6 +390,10 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                     end
                 end
             end
+            -- !SECTION
+
+            -- SECTION: OnAfterCaptured
+            -- TODO
             -- !SECTION
 
             -- SECTION: SelfRequest
