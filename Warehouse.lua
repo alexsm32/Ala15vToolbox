@@ -340,12 +340,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
 
                         -- Route group to Battle zone.
                         local ToCoord = zone:GetRandomCoordinate()
-                        if group:GetCategory() == Group.Category.GROUND then
-                            group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
-                        else
-                            group:RouteGroundTo(ToCoord, group:GetSpeedMax() * 0.8)
-                        end
-                        
+                        group:RouteGroundTo(ToCoord, group:GetSpeedMax() * 0.8)
 
                     end
                 else
