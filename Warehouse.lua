@@ -305,10 +305,10 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
 
             local portZone = nil
             for _, zone in pairs(DBportZone:GetSet()) do
-                if UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < 10000 then   -- REVIEW: Distance
+                if UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < 10000 then -- REVIEW: Distance
                     portZone = zone:GetName()
                     env.info("ALA15vToolBox WarehouseAutoGen: Selected port zone, " ..
-                    portZone .. ", for the warehouse, " ..
+                        portZone .. ", for the warehouse, " ..
                         static:GetName())
                 end
             end
@@ -340,7 +340,12 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
 
                         -- Route group to Battle zone.
                         local ToCoord = zone:GetRandomCoordinate()
-                        group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
+                        if group:GetCategory() == Group.Category.GROUND then
+                            group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
+                        else
+                            group:RouteGroundTo(ToCoord, group:GetSpeedMax() * 0.8)
+                        end
+                        
 
                     end
                 else
@@ -351,7 +356,11 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
 
                         -- Route group to Battle zone.
                         local ToCoord = zone:GetRandomCoordinate()
-                        group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
+                        if group:GetCategory() == Group.Category.GROUND then
+                            group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
+                        else
+                            group:RouteGroundTo(ToCoord, group:GetSpeedMax() * 0.8)
+                        end
 
                     end
 
