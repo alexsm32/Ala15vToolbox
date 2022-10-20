@@ -354,7 +354,23 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                         if group:GetCategory() == Group.Category.GROUND then
                             group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
                         else
-                            group:RouteGroundTo(ToCoord, group:GetSpeedMax() * 0.8)
+                            local path = ASTAR:New()
+                            path:SetStartCoordinate(ZONE:New(portZone):GetRandomCoordinate())
+                            path:SetEndCoordinate(ToCoord)
+                            path:SetValidNeighbourDistance(6000)    --REVIEW
+                            path:SetValidNeighbourLoS(4000)         --REVIEW
+                            local nodes = path:CreateGrid(zone:GetSurfaceType(),
+                                UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) * 3,
+                                UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) / 2, nil, nil, true)
+
+                            local points = {}
+                            for _, point in pairs(path:GetPath(true, false)) do
+                                table.insert(points, point.coordinate:WaypointNaval())
+                            end
+
+                            group:Route(points)
+
+                            --group:RouteGroundTo(ToCoord, group:GetSpeedMax() * 0.8)
                         end
 
                     end
