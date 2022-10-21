@@ -354,14 +354,17 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                         if group:GetCategory() == Group.Category.GROUND then
                             group:RouteGroundOnRoad(ToCoord, group:GetSpeedMax() * 0.8)
                         else
+                            local wDistance = UTILS.VecDist2D(static:GetVec2(), zone:GetVec2())
+                            local BoxHY = wDistance + 40000
+                            local SpaceX = 20000
+                            local deltaX = 4000
+
                             local path = ASTAR:New()
                             path:SetStartCoordinate(ZONE:New(portZone):GetRandomCoordinate())
                             path:SetEndCoordinate(ToCoord)
-                            path:SetValidNeighbourDistance(6000)    --REVIEW
-                            path:SetValidNeighbourLoS(4000)         --REVIEW
-                            local nodes = path:CreateGrid(zone:GetSurfaceType(),
-                                UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) * 3,
-                                UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) / 2, nil, nil, true)
+                            path:SetValidNeighbourDistance(6000) --REVIEW
+                            path:SetValidNeighbourLoS(4000) --REVIEW
+                            path:CreateGrid(zone:GetSurfaceType(), BoxHY, SpaceX, deltaX, nil, true)
 
                             local points = {}
                             for _, point in pairs(path:GetPath(true, false)) do
@@ -482,7 +485,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                     IsOccupied then
                     if zoneSurfaceType == land.SurfaceType.SHALLOW_WATER then
                         warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
-                            WAREHOUSE.Attribute.NAVAL_OTHER, 2, nil, nil, nil, zone:GetName())
+                            WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 2, nil, nil, nil, zone:GetName())
                     else
                         warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
                             WAREHOUSE.Attribute.NAVAL_WARSHIP,
