@@ -364,7 +364,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                             path:SetEndCoordinate(ToCoord)
                             path:SetValidNeighbourDistance(6000) --REVIEW
                             path:SetValidNeighbourLoS(4000) --REVIEW
-                            path:CreateGrid(zone:GetSurfaceType(), BoxHY, SpaceX, deltaX, nil, true)
+                            path:CreateGrid(zone:GetSurfaceType(), BoxHY, SpaceX, deltaX, nil, false)
 
                             local points = {}
                             for _, point in pairs(path:GetPath(true, false)) do
