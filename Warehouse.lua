@@ -487,10 +487,15 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                         warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
                             WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 2, nil, nil, nil, zone:GetName())
                     else
+                        local closestRoad = zone:GetCoordinate(0):GetClosestPointToRoad()
+
                         warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
                             WAREHOUSE.Attribute.NAVAL_WARSHIP,
                             1, nil, nil, nil, zone:GetName())
-                        --warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 1, nil, nil, nil, zone:GetName())
+                        if zone:Get2DDistance(closestRoad) < 23000 then
+                            warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
+                                WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 1, nil, nil, nil, zone:GetName())
+                        end
                     end
                 end
             end
