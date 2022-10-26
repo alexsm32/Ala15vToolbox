@@ -1,4 +1,3 @@
-
 function AddMenuCoalition(menuCoalition, text, father)
     local menu
     if type(text) == "string" then
@@ -39,10 +38,43 @@ function CreateName(prefix, coord)
     return prefix .. "_" .. mgrs[3] .. string.sub(mgrs[4], 1, 1) .. string.sub(mgrs[5], 1, 1)
 end
 
-
 function SpawnStaticCoor(template, nation, coor, heading, name)
     local static = SPAWNSTATIC:NewFromStatic(template, nation)
     static:SpawnFromCoordinate(coor, heading, name)
+end
+
+function StaticRepair(stPrefix, cratePrefix, crates, range, coalition)
+    local DBObject = SET_STATIC:New()
+    DBObject:FilterCoalitions(coalition)
+    DBObject:FilterPrefixes(stPrefix)
+    DBObject:FilterOnce()
+    for _, static in pairs(DBObject:GetSet()) do
+        if not static:IsAlive() then
+            local scanZone = ZONE_RADIUS:New("scanzone" .. static:GetName(), static:GetVec2(), range)
+
+            local DBCrate = SET_STATIC:New()
+            DBCrate:FilterCoalitions(coalition)
+            DBCrate:FilterZones({ scanZone })
+            DBCrate:FilterPrefixes(cratePrefix)
+            DBCrate:FilterOnce()
+
+            if DBCrate:Count() >= crates then
+                -- TODO: for loop to delete crates
+                local removedCrates = 0
+                for _, crate in pairs(DBCrate:GetSet()) do
+                    if removedCrates < crates then -- This condition prevents deleating more crates than necessary
+                        crate:Destroy() -- Remove the crates used to repair
+                        removedCrates = removedCrates + 1
+                    end
+                end
+
+                static:Destroy() -- First remove the destroyed structure
+                static:ReSpawn() -- Then respawn the structure
+                env.info("ALA15vToolBox StaticRepair: Repaired the structure with name, " ..
+                    static:GetName())
+            end
+        end
+    end
 end
 
 Ala15vToolBoxUtilLoaded = true -- In case it is needed to check if this module is loaded
