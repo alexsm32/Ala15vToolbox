@@ -266,27 +266,31 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
             static:GetName())
         if static:IsAlive() then
             local spawn = nil
+            local spawnDist = 1000
             for _, zone in pairs(DBspZone:GetSet()) do
-                if UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < 1000 then
+                local dist = UTILS.VecDist2D(static:GetVec2(), zone:GetVec2())
+                if dist < spawnDist then
+                    spawnDist = dist
                     spawn = zone:GetName()
-                    env.info("ALA15vToolBox WarehouseAutoGen: Selected spawn zone, " ..
-                        spawn .. ", for the warehouse, " ..
-                        static:GetName())
                 end
             end
             if spawn == nil then
                 env.warning("ALA15vToolBox WarehouseAutoGen: No suitable spawn zone was found for the warehouse, " ..
                     static:GetName())
+            else
+                env.info("ALA15vToolBox WarehouseAutoGen: Selected spawn zone, " ..
+                    spawn .. " at " .. spawnDist .. "m, for the warehouse, " ..
+                    static:GetName())
             end
 
 
             local defZone = nil
+            local defZoneDist = 300
             for _, zone in pairs(DBdefZone:GetSet()) do
-                if UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < 300 then
+                local dist = UTILS.VecDist2D(static:GetVec2(), zone:GetVec2())
+                if dist < defZoneDist then
+                    defZoneDist = dist
                     defZone = zone:GetName()
-                    env.info("ALA15vToolBox WarehouseAutoGen: Selected defense zone, " ..
-                        defZone .. ", for the warehouse, " ..
-                        static:GetName())
                 end
             end
             if defZone == nil then
@@ -301,16 +305,28 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                     ..
                     defZone:GetName() .. ", for the warehouse, " ..
                     static:GetName())
+            else
+                env.info("ALA15vToolBox WarehouseAutoGen: Selected defense zone, " ..
+                    defZone .. " at " .. defZoneDist .. "m, for the warehouse, " ..
+                    static:GetName())
             end
 
             local portZone = nil
+            local portZoneDist = 10000
             for _, zone in pairs(DBportZone:GetSet()) do
-                if UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < 10000 then -- REVIEW: Distance
+                local dist = UTILS.VecDist2D(static:GetVec2(), zone:GetVec2())
+                if dist < portZoneDist then -- REVIEW: Distance
+                    portZoneDist = dist
                     portZone = zone:GetName()
-                    env.info("ALA15vToolBox WarehouseAutoGen: Selected port zone, " ..
-                        portZone .. ", for the warehouse, " ..
-                        static:GetName())
                 end
+            end
+            if portZone == nil then
+                env.info("ALA15vToolBox WarehouseAutoGen: No suitable port zone was found for the warehouse, " ..
+                    static:GetName())
+            else
+                env.info("ALA15vToolBox WarehouseAutoGen: Selected port zone, " ..
+                    portZone .. " at " .. portZoneDist .. "m, for the warehouse, " ..
+                    static:GetName())
             end
 
             env.info("ALA15vToolBox WarehouseAutoGen: Running NewWarehouse() function for the static, " ..
@@ -482,7 +498,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                         nil, nil, nil, zone:GetName())
                 elseif (UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < coverRange) and
                     (zoneSurfaceType == land.SurfaceType.SHALLOW_WATER or zoneSurfaceType == land.SurfaceType.WATER) and
-                    IsOccupied then
+                    IsOccupied and portZone then
                     if zoneSurfaceType == land.SurfaceType.SHALLOW_WATER then
                         warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE,
                             WAREHOUSE.Attribute.NAVAL_ARMEDSHIP, 2, nil, nil, nil, zone:GetName())
