@@ -35,7 +35,7 @@ function CreateName(prefix, coord)
     for value in string.gmatch(coord:GetName(), "%S+") do
         table.insert(mgrs, value)
     end
-    return prefix .. "_" .. mgrs[3] .. string.sub(mgrs[4], 1, 1) .. string.sub(mgrs[5], 1, 1)
+    return mgrs[3] .. string.sub(mgrs[4], 1, 1) .. string.sub(mgrs[5], 1, 1) .. "_" .. prefix
 end
 
 function SpawnStaticCoor(template, nation, coor, heading, name)

@@ -12,16 +12,16 @@ end
 --[[
 - @brief      This function will create a Warehouse.
 -
-- @example  --REVIEW    myWarehouse = NewWarehouse("wh1", "blue", {T90={number=20, type=nil}, Mi8={number=10, type=WAREHOUSE.Attribute.AIR_TRANSPORTHELO}}, nil, true)
-- @example  --REVIEW    myWarehouse = NewWarehouse("wh2", "red", {T90={number=20, type=nil}, Ka50={number=15, type=nil}}, "zoneWh2", false)
+- @example  --REVIEW -   myWarehouse = NewWarehouse("wh1", "blue", {T90={number=20, type=nil}, Mi8={number=10, type=WAREHOUSE.Attribute.AIR_TRANSPORTHELO}}, nil, true)
+- @example  --REVIEW -   myWarehouse = NewWarehouse("wh2", "red", {T90={number=20, type=nil}, Ka50={number=15, type=nil}}, "zoneWh2", false)
 -
-- @param        wh                  <String>                                      This is the name of the structure that represent the warehouse
-- @param        coalition           <String>      {OPTIONS: "blue", "red"}        This is the coalition side of the warehouse
-- @param        assets              <Key=Integer,WAREHOUSE.Attribute>             This is the set of assets that will be added to the warehouse  -NOTE: the key is the group name (NO SPACES) of the template and it contains the total number assets added to the warehouse and the type
-- @param        spZone              <String>    -NOTE: if not used type " nil "   This is the name of zone used by the warehouse as default spawn zone
-- @param        defZone             <String>    -NOTE: if not used type " nil "   This is the name of zone used by the warehouse as selfdefend zone for triggering the event OnAfterAttacked
-- @param        portZone            <String>    -NOTE: if not used type " nil "   This is the name of zone used by the warehouse as port zone for spawning ships
-- @param        selfReqMenu         <Boolean>   -NOTE: Util.lua function needed   If true, a new radio menu will be created with radio commands to request units from that warehouse
+- @param        wh                  <String>                                       This is the name of the structure that represent the warehouse
+- @param        coalition           <String>      {OPTIONS: "blue", "red"}         This is the coalition side of the warehouse
+- @param        assets              <Key=Integer,WAREHOUSE.Attribute>              This is the set of assets that will be added to the warehouse  -NOTE: the key is the group name (NO SPACES) of the template and it contains the total number assets added to the warehouse and the type
+- @param        spZone              <String>    --NOTE: if not used type " nil "   This is the name of zone used by the warehouse as default spawn zone
+- @param        defZone             <String>    --NOTE: if not used type " nil "   This is the name of zone used by the warehouse as selfdefend zone for triggering the event OnAfterAttacked
+- @param        portZone            <String>    --NOTE: if not used type " nil "   This is the name of zone used by the warehouse as port zone for spawning ships
+- @param        selfReqMenu         <Boolean>   --NOTE: Util.lua function needed   If true, a new radio menu will be created with radio commands to request units from that warehouse
 -
 - @return   warehouse   <WAREHOUSE>     The function return the hole WAREHOUSE object
 -
@@ -158,13 +158,13 @@ env.info("ALA15vToolBox NewWarehouseSelfReq declaration done")
 - @example    WarehouseAutoGen("wh", "whz", "blue", {T90={number=20, type=nil}, Mi8={number=10, type=WAREHOUSE.Attribute.AIR_TRANSPORTHELO}}, 10000, false, true)
 - @example    WarehouseAutoGen("wh", "whz", "blue", {T90={number=20, type=nil}, Ka50={number=15, type=nil}}, 1500, false, true)
 -
-- @param        whPrefix            <String>                                      This is the prefix of the structures that will be detected as warehouses
-- @param        zPrefix             <String>    -NOTE: it should accept a table   This is the prefix of the zones that the warehouses will try to control
-- @param        coalition           <String>      {OPTIONS: "blue", "red"}        This is the coalition side of the warehouses
-- @param        templates           <Key=Integer,WAREHOUSE.Attribute>             This is the set of assets that will be added to the warehouse  -NOTE: the key is the group name (NO SPACES) of the template and it contains the total number assets added to the warehouse and the type
-- @param        coverRange          <Integer>                                     This is the range in meters where the warehouse will try to control
-- @param        selfDefense         <Boolean>                                     If true, the warehouses will spawn 1/4 of the available units when enemy units get closer than 500 meters     -NOTE: the radius can be manually set with a trigger zone with prefix "defzone". Warehouses will detect any zone with that prefix if it is closer than 300 meters
-- @param        selfReqMenu         <Boolean>   -NOTE: Util.lua function needed   If true, a new radio menu will be created with radio commands to request units from that warehouse
+- @param        whPrefix            <String>                                       This is the prefix of the structures that will be detected as warehouses
+- @param        zPrefix             <String>    -NOTE: it should accept a table    This is the prefix of the zones that the warehouses will try to control
+- @param        coalition           <String>      {OPTIONS: "blue", "red"}         This is the coalition side of the warehouses
+- @param        templates           <Key=Integer,WAREHOUSE.Attribute>              This is the set of assets that will be added to the warehouse  -NOTE: the key is the group name (NO SPACES) of the template and it contains the total number assets added to the warehouse and the type
+- @param        coverRange          <Integer>                                      This is the range in meters where the warehouse will try to control
+- @param        selfDefense         <Boolean>                                      If true, the warehouses will spawn 1/4 of the available units when enemy units get closer than 500 meters     -NOTE: the radius can be manually set with a trigger zone with prefix "defzone". Warehouses will detect any zone with that prefix if it is closer than 300 meters
+- @param        selfReqMenu         <Boolean>   --NOTE: Util.lua function needed   If true, a new radio menu will be created with radio commands to request units from that warehouse
 -
 - @return
 -
@@ -182,7 +182,7 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
     DBObject:FilterPrefixes(whPrefix)
     DBObject:FilterOnce()
 
-    DBdefZone = SET_ZONE:New()
+    local DBdefZone = SET_ZONE:New()
     DBdefZone:FilterPrefixes("defzone")
     DBdefZone:FilterOnce()
 
@@ -495,6 +495,8 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
                     warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_TRUCK, 1,
                         nil, nil, nil, zone:GetName())
                     warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_AAA, 1,
+                        nil, nil, nil, zone:GetName())
+                    warehouse:AddRequest(warehouse, WAREHOUSE.Descriptor.ATTRIBUTE, WAREHOUSE.Attribute.GROUND_SAM, 1,
                         nil, nil, nil, zone:GetName())
                 elseif (UTILS.VecDist2D(static:GetVec2(), zone:GetVec2()) < coverRange) and
                     (zoneSurfaceType == land.SurfaceType.SHALLOW_WATER or zoneSurfaceType == land.SurfaceType.WATER) and

@@ -3,15 +3,15 @@
 -
 - @example    Atis(AIRBASE.Caucasus.Kutaisi, 143.00, "Radio Relay Kutaisi", {263.0, 134.0}, 44, 113.60, 109.75, nil, nil)
 -
-- @param                    airPort         <Wrapper.Airbase>                              This is the airport
-- @param                    radio           <Float>                                        This is the radio frequency that the relay will use to transmit
-- @param                    vehicle         <String>                                       This is vehicle group name that will act as relay
-- @param                    freq            <Float>                                        This is the frequencies available on the airport
-- @param    (OPTIONAL)      tacan           <Integer>   -NOTE: if not used type " nil "    This is the tacan available on the airport
-- @param    (OPTIONAL)      vor             <Float>     -NOTE: if not used type " nil "    This is the vor frequency available on the airport
-- @param    (OPTIONAL)      ils             <Float>     -NOTE: if not used type " nil "    This is the ils frequency available on the airport
-- @param    (OPTIONAL)      ndbOut          <Float>     -NOTE: if not used type " nil "    This is the outer ndb frequency available on the airport
-- @param    (OPTIONAL)      ndbIn           <Float>     -NOTE: if not used type " nil "    This is the inner ndb frequency available on the airport
+- @param                    airPort         <Wrapper.Airbase>                               This is the airport
+- @param                    radio           <Float>                                         This is the radio frequency that the relay will use to transmit
+- @param                    vehicle         <String>                                        This is vehicle group name that will act as relay
+- @param                    freq            <Float>                                         This is the frequencies available on the airport
+- @param    (OPTIONAL)      tacan           <Integer>   --NOTE: if not used type " nil "    This is the tacan available on the airport
+- @param    (OPTIONAL)      vor             <Float>     --NOTE: if not used type " nil "    This is the vor frequency available on the airport
+- @param    (OPTIONAL)      ils             <Float>     --NOTE: if not used type " nil "    This is the ils frequency available on the airport
+- @param    (OPTIONAL)      ndbOut          <Float>     --NOTE: if not used type " nil "    This is the outer ndb frequency available on the airport
+- @param    (OPTIONAL)      ndbIn           <Float>     --NOTE: if not used type " nil "    This is the inner ndb frequency available on the airport
 
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Ops.Atis.html
 - @see        https://flightcontrol-master.github.io/MOOSE_DOCS/Documentation/Wrapper.Airbase.html

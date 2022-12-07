@@ -1,18 +1,18 @@
 --[[
 - @brief      This function will create an AI A2G Dispatcher. NOTE: The AI_A2G_DISPATCHER can be use in many different ways. The way I am offering here is 1 airport = 1 or more squadrons = 1 template
 -
-- @example  --REVIEW    myA2G_Dis = A2G_Dispatcher("HQ", {"RECON"}, "red", 200000, "Lar", {Su25={template="Su-25T", number=20, task="BAI"}, Ka50={template="Ka-50", number=10, task="CAS"}}, 0.2, 2, "A2G Dispatcher Lar")
-- @example  --REVIEW    myA2G_Dis = A2G_Dispatcher("HQ", nil, "red", 200000, "Lar", {Su25={template="Su-25T", number=20, task="SEAD"}, Ka50={template="Ka-50", number=10, task="CAS"}}, 0.2, 2, "A2G Dispatcher Lar")
+- @example  --REVIEW -   myA2G_Dis = A2G_Dispatcher("HQ", {"RECON"}, "red", 200000, "Lar", {Su25={template="Su-25T", number=20, task="BAI"}, Ka50={template="Ka-50", number=10, task="CAS"}}, 0.2, 2, "A2G Dispatcher Lar")
+- @example  --REVIEW -   myA2G_Dis = A2G_Dispatcher("HQ", nil, "red", 200000, "Lar", {Su25={template="Su-25T", number=20, task="SEAD"}, Ka50={template="Ka-50", number=10, task="CAS"}}, 0.2, 2, "A2G Dispatcher Lar")
 -
-- @param                    hq            <String>                                      This is the group name of the unit that represent the command center
-- @param    (OPTIONAL)      radars        <String>      -NOTE: if not used type " nil " This is the prefix or set of prefixes that will be used to filter the detection groups. If nil, it will use all the ground units
-- @param                    coalition     <String>      {OPTIONS: "blue", "red"}        This is the coalition side that the detection group filter will focus on
-- @param                    radius        <Integer>                                     This is the radius from the command center that will represent the area deffended
-- @param                    airBases      <String>                                      This is the airport available for the dispatcher
-- @param                    templates     <Key = String,Integer,String>     {TASKS: "BAI", "CAS", "SEAD"}     -NOTE: the key is the squadron name and it contains the template names and number of aircrafts    This is the set of squadrons, templates, number of aircrafts and task available for the dispatcher
-- @param                    overhead      <Float>                                       This is the proportion of aircrafts the CGI will respon with. The product of this parameter and the number of detected enemy aircrafts represent the number of aircrafts the CGI will send
-- @param                    groupNumber   <Integer>                                     This is the number of aircrafts that form one group
-- @param                    menuName      <String>                                      This is the name of the menu under F10 Other>Dispatchers
+- @param                    hq            <String>                                       This is the group name of the unit that represent the command center
+- @param    (OPTIONAL)      radars        <String>      --NOTE: if not used type " nil " This is the prefix or set of prefixes that will be used to filter the detection groups. If nil, it will use all the ground units
+- @param                    coalition     <String>      {OPTIONS: "blue", "red"}         This is the coalition side that the detection group filter will focus on
+- @param                    radius        <Integer>                                      This is the radius from the command center that will represent the area deffended
+- @param                    airBases      <String>                                       This is the airport available for the dispatcher
+- @param                    templates     <Key = String,Integer,String>     {TASKS: "BAI", "CAS", "SEAD"}     --NOTE: the key is the squadron name and it contains the template names and number of aircrafts    This is the set of squadrons, templates, number of aircrafts and task available for the dispatcher
+- @param                    overhead      <Float>                                        This is the proportion of aircrafts the CGI will respon with. The product of this parameter and the number of detected enemy aircrafts represent the number of aircrafts the CGI will send
+- @param                    groupNumber   <Integer>                                      This is the number of aircrafts that form one group
+- @param                    menuName      <String>                                       This is the name of the menu under F10 Other>Dispatchers
 -
 - @return   A2GDispatcher   <AI_A2G_DISPATCHER>     The function return the hole AI_A2G_DISPATCHER object
 -
