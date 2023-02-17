@@ -355,18 +355,26 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
     DBstrategicZone:FilterPrefixes("StrategicZone")
     DBstrategicZone:FilterOnce()
 
+    local DBcheckPoint
+    DBcheckPoint = SET_ZONE:New()
+    DBcheckPoint:FilterPrefixes("CheckPoint")
+    DBcheckPoint:FilterOnce()
+
     local DBsamSites
     DBsamSites = SET_ZONE:New()
-    DBsamSites:FilterPrefixes("SamSites")
+    DBsamSites:FilterPrefixes("SamSite")
     DBsamSites:FilterOnce()
 
     local DBborderStrategicZones = SET_ZONE:New()
     local DBconflictStrategicZones = SET_ZONE:New()
     local DBattackStrategicZones = SET_ZONE:New()
 
-    local DBborderSamSites = SET_ZONE:New()     --TODO
-    local DBconflictSamSites = SET_ZONE:New()   --TODO
-    local DBattackSamSites = SET_ZONE:New()     --TODO
+    local DBborderCheckPoints = SET_ZONE:New()
+    local DBconflictCheckPoints = SET_ZONE:New()
+
+    local DBborderSamSites = SET_ZONE:New() --TODO
+    local DBconflictSamSites = SET_ZONE:New()
+    local DBattackSamSites = SET_ZONE:New()
 
 
     -- SECTION: ChiefCode
@@ -391,6 +399,17 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
             local strategic = zone
             if border:IsCoordinateInZone(strategic:GetCoordinate()) then
                 DBborderStrategicZones:AddZone(strategic)
+            end
+        end
+    end
+
+    -- CheckPoints
+    for _, zone in pairs(BorderZones:GetSet()) do
+        local border = zone
+        for _, zone in pairs(DBcheckPoint:GetSet()) do
+            local strategic = zone
+            if border:IsCoordinateInZone(strategic:GetCoordinate()) then
+                DBborderCheckPoints:AddZone(strategic)
             end
         end
     end
@@ -421,6 +440,7 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
         ConflictZones:AddZone(zone)
     end
 
+    -- StrategicZones
     for _, zone in pairs(ConflictZones:GetSet()) do
         local border = zone
         for _, zone in pairs(DBstrategicZone:GetSet()) do
@@ -430,6 +450,29 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
             end
         end
     end
+
+    -- CheckPoints
+    for _, zone in pairs(ConflictZones:GetSet()) do
+        local border = zone
+        for _, zone in pairs(DBcheckPoint:GetSet()) do
+            local strategic = zone
+            if border:IsCoordinateInZone(strategic:GetCoordinate()) then
+                DBconflictCheckPoints:AddZone(strategic)
+            end
+        end
+    end
+
+    -- SamSites
+    for _, zone in pairs(ConflictZones:GetSet()) do
+        local border = zone
+        for _, zone in pairs(DBsamSites:GetSet()) do
+            local samSite = zone
+            if border:IsCoordinateInZone(samSite:GetCoordinate()) then
+                DBconflictSamSites:AddZone(samSite)
+            end
+        end
+    end
+
     -- !SECTION
     -- SECTION: AttackZones
     local AttackZones = SET_ZONE:New()
@@ -445,6 +488,7 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
         AttackZones:AddZone(zone)
     end
 
+    -- StrategicZones
     for _, zone in pairs(AttackZones:GetSet()) do
         local border = zone
         for _, zone in pairs(DBstrategicZone:GetSet()) do
@@ -454,6 +498,18 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
             end
         end
     end
+
+    -- SamSites
+    for _, zone in pairs(AttackZones:GetSet()) do
+        local border = zone
+        for _, zone in pairs(DBsamSites:GetSet()) do
+            local samSite = zone
+            if border:IsCoordinateInZone(samSite:GetCoordinate()) then
+                DBattackSamSites:AddZone(samSite)
+            end
+        end
+    end
+
     -- !SECTION
     -- SECTION: AgentSet
     local AgentSet = SET_GROUP:New()
@@ -763,6 +819,79 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
         Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
     end
 
+    for _, zone in pairs(DBborderCheckPoints:GetSet()) do
+        local zoneName = zone:GetName()
+        local splitName = {}
+        for str in string.gmatch(zoneName, "%S+") do
+            table.insert(splitName, str)
+        end
+        local priotity = tonumber(splitName[2])
+        local importance = tonumber(splitName[3])
+        local StrategicZone = OPSZONE:New(zoneName)
+
+        --StrategicZone:SetDrawZone(false)  --REVIEW
+        --StrategicZone:SetMarkZone(false)  --REVIEW
+
+        local ResourceListEmpty, ResourceEmptyInf = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_INFANTRY)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_APC)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_TRUCK)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_AAA)
+
+        -- Resource Infantry Bravo is transported by up to 2 APCs.
+        Chief:AddTransportToResource(ResourceEmptyInf, 1, 1, { GROUP.Attribute.GROUND_TRUCK })
+
+
+        local ResourceListOccupied, ResourceOccupiedInf = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_INFANTRY)
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.ONGUARD, 1, 2,
+            GROUP.Attribute.GROUND_APC)
+
+        -- Resource Infantry Bravo is transported by up to 2 APCs.
+        Chief:AddTransportToResource(ResourceOccupiedInf, 1, 1, { GROUP.Attribute.GROUND_TRUCK })
+
+        Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
+    end
+
+    for _, zone in pairs(DBborderSamSites:GetSet()) do
+        local zoneName = zone:GetName()
+        local splitName = {}
+        for str in string.gmatch(zoneName, "%S+") do
+            table.insert(splitName, str)
+        end
+        local priotity = tonumber(splitName[2])
+        local importance = tonumber(splitName[3])
+        local StrategicZone = OPSZONE:New(zoneName)
+
+        --StrategicZone:SetDrawZone(false)  --REVIEW
+        --StrategicZone:SetMarkZone(false)  --REVIEW
+
+        local ResourceListEmpty, ResourceEmpty = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 2,
+            GROUP.Attribute.GROUND_IFV)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 2,
+            GROUP.Attribute.GROUND_TRUCK)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 1, 2,
+            GROUP.Attribute.GROUND_AAA)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 1, 2,
+            GROUP.Attribute.GROUND_SAM)
+
+
+        local ResourceListOccupied, ResourceOccupied = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_IFV)
+        -- We also add ARTY missions with at least one and at most two assets. We additionally require these to be MLRS groups (and not howitzers).
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.ARTY, 0, 2)
+        -- Add at least one RECON mission that uses UAV type assets.
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.RECON, 0, 1, GROUP.Attribute.AIR_UAV)
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.CASENHANCED, 0, 1)
+
+
+
+        Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
+    end
+
     -- ANCHOR: In conflict zone
     for _, zone in pairs(DBconflictStrategicZones:GetSet()) do
         local zoneName = zone:GetName()
@@ -809,6 +938,79 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
         Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
     end
 
+    for _, zone in pairs(DBconflictCheckPoints:GetSet()) do
+        local zoneName = zone:GetName()
+        local splitName = {}
+        for str in string.gmatch(zoneName, "%S+") do
+            table.insert(splitName, str)
+        end
+        local priotity = tonumber(splitName[2]) - 30
+        local importance = tonumber(splitName[3]) + 3
+        local StrategicZone = OPSZONE:New(zoneName)
+
+        --StrategicZone:SetDrawZone(false)  --REVIEW
+        --StrategicZone:SetMarkZone(false)  --REVIEW
+
+        local ResourceListEmpty, ResourceEmptyInf = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_INFANTRY)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_APC)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_TRUCK)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_AAA)
+
+        -- Resource Infantry Bravo is transported by up to 2 APCs.
+        Chief:AddTransportToResource(ResourceEmptyInf, 1, 1, { GROUP.Attribute.GROUND_APC })
+
+
+        local ResourceListOccupied, ResourceOccupiedInf = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_INFANTRY)
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.ONGUARD, 1, 2,
+            GROUP.Attribute.GROUND_APC)
+
+        -- Resource Infantry Bravo is transported by up to 2 APCs.
+        Chief:AddTransportToResource(ResourceOccupiedInf, 1, 1, { GROUP.Attribute.GROUND_APC })
+
+        Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
+    end
+
+    for _, zone in pairs(DBconflictSamSites:GetSet()) do
+        local zoneName = zone:GetName()
+        local splitName = {}
+        for str in string.gmatch(zoneName, "%S+") do
+            table.insert(splitName, str)
+        end
+        local priotity = tonumber(splitName[2]) - 30
+        local importance = tonumber(splitName[3]) + 3
+        local StrategicZone = OPSZONE:New(zoneName)
+
+        --StrategicZone:SetDrawZone(false)  --REVIEW
+        --StrategicZone:SetMarkZone(false)  --REVIEW
+
+        local ResourceListEmpty, ResourceEmpty = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_IFV)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_TRUCK)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_AAA)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_SAM)
+
+
+        local ResourceListOccupied, ResourceOccupied = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_IFV)
+        -- We also add ARTY missions with at least one and at most two assets. We additionally require these to be MLRS groups (and not howitzers).
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.ARTY, 0, 1)
+        -- Add at least one RECON mission that uses UAV type assets.
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.RECON, 0, 1, GROUP.Attribute.AIR_UAV)
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.CASENHANCED, 0, 1)
+
+
+
+        Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
+    end
+
     -- ANCHOR: In attack zone
     for _, zone in pairs(DBattackStrategicZones:GetSet()) do
         local zoneName = zone:GetName()
@@ -841,6 +1043,39 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
         Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.RECON, 1, 1, GROUP.Attribute.AIR_UAV)
         -- Add at least one but at most two BOMBCARPET missions.
         Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.BOMBCARPET, 0, 2)
+
+
+        Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
+    end
+
+    for _, zone in pairs(DBattackSamSites:GetSet()) do
+        local zoneName = zone:GetName()
+        local splitName = {}
+        for str in string.gmatch(zoneName, "%S+") do
+            table.insert(splitName, str)
+        end
+        local priotity = tonumber(splitName[2]) - 60
+        local importance = tonumber(splitName[3]) + 6
+        local StrategicZone = OPSZONE:New(zoneName)
+
+        --StrategicZone:SetDrawZone(false)  --REVIEW
+        --StrategicZone:SetMarkZone(false)  --REVIEW
+
+        local ResourceListEmpty, ResourceEmpty = Chief:CreateResource(AUFTRAG.Type.ONGUARD, 1, 1,
+            GROUP.Attribute.GROUND_IFV)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_TRUCK)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_AAA)
+        Chief:AddToResource(ResourceListEmpty, AUFTRAG.Type.ONGUARD, 0, 1,
+            GROUP.Attribute.GROUND_SAM)
+
+
+        local ResourceListOccupied, ResourceOccupied = Chief:CreateResource(AUFTRAG.Type.RECON, 0, 1,
+            GROUP.Attribute.AIR_UAV)
+        -- We also add ARTY missions with at least one and at most two assets. We additionally require these to be MLRS groups (and not howitzers).
+        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.ARTY, 0, 1)
+        -- Add at least one RECON mission that uses UAV type assets.
 
 
         Chief:AddStrategicZone(StrategicZone, priotity, importance, ResourceListOccupied, ResourceListEmpty)
