@@ -28,6 +28,13 @@ The functions also write logs in this file. Those logs can be useful to narrow t
 - **Warning**: shows issues that can modify the normal behaviour of the function. Those could be normal for campaings. But in normal missions, the editor should take a look and apply changes.
 - **Error**: shows critical issues that will stop the function. In some cases, those could be normal for campaings. But in normal missions, the editor **must** take a look and apply changes.
 
+
+## Advanced tips
+- Instead of using *Do Script* or *Do Script File* to load your script into DCS, use the function `assert(loadfile(<PATH>))()` in the *Do Script*. If you keep your scripts in the `Saved Games\DCS.openbeta\` folder you can use the function `lfs.writedir()` which returns the full path of the folder. Check the next example:
+    > `assert(loadfile(lfs.writedir().."Missions\\Scripts\\Ala15vToolbox\\Warehouse.lua"))()`
+
+    Doing this, the script is loaded dynamically everytime the mission starts and the errors, in the logs file, will point to the specific row in your script.
+
 ## Roadmap
 - Moose Modules:
     - [x] AI A2A Dispatcher `(Campaing Ready)`
@@ -37,6 +44,7 @@ The functions also write logs in this file. Those logs can be useful to narrow t
     - [ ] Designate
     - [x] Suppression
     - [x] Warehouse (WIP) `(Campaing Ready)`
+    - [x] Ops (WIP) `(Campaing Ready)`
     - [x] ATIS `(Campaing Ready)`
     - [x] CSAR
     - [ ] CTLD
