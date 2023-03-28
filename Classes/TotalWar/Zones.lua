@@ -114,12 +114,12 @@ function TotalWar:onafterAddStrategicZones(From, Event, To)
 
     for _, zone in pairs(Ala15vToolbox.TotalWar.StrategicZones) do
         local zoneName = zone.StZone:GetName()
-        local splitName = {}
-        for str in string.gmatch(zoneName, "%S+") do
-            table.insert(splitName, str)
-        end
-        local priotity = tonumber(splitName[2])
-        local importance = tonumber(splitName[3])
+        local zoneProperties = zone.StZone:GetZone():GetAllProperties()
+
+        local priotity = tonumber(zoneProperties['Priotity']) or nil
+        local importance = tonumber(zoneProperties['Importance']) or nil
+        env.error(priotity)
+        env.error(importance)
 
         for _, border in pairs(ConflictZones:GetSet()) do
             if border:IsCoordinateInZone(zone.StZone:GetCoordinate()) then
