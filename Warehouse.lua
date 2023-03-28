@@ -400,7 +400,6 @@ function WarehouseAutoGen(whPrefix, zPrefix, coalition, templates, coverRange, s
             -- !SECTION
 
             -- SECTION: OnAfterAssetDead event
-            -- TODO: get closest warehouse
             function warehouse:OnAfterAssetDead(From, Event, To, asset, request)
                 local asset = asset --Functional.Warehouse#WAREHOUSE.Assetitem
                 local request = request --Functional.Warehouse#WAREHOUSE.Pendingitem

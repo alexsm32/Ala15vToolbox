@@ -811,7 +811,7 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
             GROUP.Attribute.GROUND_TANK)
         Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.PATROLZONE, 1, 2,
             GROUP.Attribute.GROUND_IFV)
-        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.CASENHANCED, 0, 1)
+        --Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.CASENHANCED, 0, 1)
 
         -- Resource Infantry Bravo is transported by up to 2 APCs.
         Chief:AddTransportToResource(ResourceOccupiedInf, 1, 2, { GROUP.Attribute.GROUND_TRUCK })
@@ -885,7 +885,7 @@ function GenerateTotalWar(Settings) -- TODO: Add conditions
         Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.ARTY, 0, 2)
         -- Add at least one RECON mission that uses UAV type assets.
         Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.RECON, 0, 1, GROUP.Attribute.AIR_UAV)
-        Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.CASENHANCED, 0, 1)
+        --Chief:AddToResource(ResourceListOccupied, AUFTRAG.Type.CASENHANCED, 0, 1)
 
 
 
