@@ -35,6 +35,10 @@ function TotalWar:onafterAddAirwings(From, Event, To)
                     local units = asset.Units
                     local range = asset.Range
                     local skill --REVIEW
+                    if asset.Training then
+                        skill = self:GetWarehouseAssetSkill(Airwing:GetVec2(), asset.Training.Static,
+                            asset.Training.Range, asset.Training.Rate, Coalition)
+                    end
                     local scramble = asset.Scramble
                     local payloads = asset.Payloads
                     -- TODO: Attribute

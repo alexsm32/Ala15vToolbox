@@ -235,7 +235,7 @@ function TotalWar:GetWarehouseAssetProduction(coor, factory, range, rate, coalit
     local statics = SET_STATIC:New()
     statics:FilterCoalitions(coalition)
     statics:FilterPrefixes(factory)
-    statics:FilterZones({zone})
+    statics:FilterZones({ zone })
     statics:FilterOnce()
 
     local FactoryCount = 0
@@ -246,6 +246,55 @@ function TotalWar:GetWarehouseAssetProduction(coor, factory, range, rate, coalit
         end
     end
     return FactoryCount * rate
+end
+
+function TotalWar:GetWarehouseAssetSkill(coor, trainingStatic, range, rate, coalition)
+    -- AI.Skill.AVERAGE     25%
+    -- AI.Skill.GOOD        50%
+    -- AI.Skill.HIGH        75%
+    -- AI.Skill.EXCELLENT   100%
+
+    local coalition = coalition
+    local zone = ZONE_RADIUS:New("scanfactorieszone", coor, range)
+    --zone:SetRadius(range)
+    --zone:SetVec2(coor)
+
+    if type(coalition) ~= "string" then
+        coalition = string.lower(UTILS.GetCoalitionName(coalition))
+    end
+
+    local statics = SET_STATIC:New()
+    statics:FilterCoalitions(coalition)
+    statics:FilterPrefixes(trainingStatic)
+    statics:FilterZones({ zone })
+    statics:FilterOnce()
+
+    local trainingFieldCount = #statics:GetSet()
+
+    --[[for _, static in pairs(statics:GetSet()) do
+        if static:IsAlive() then
+            trainingFieldCount = trainingFieldCount + 1
+        end
+    end]]
+    --
+    local minRate = rate
+    local maxRate = trainingFieldCount * rate
+    if maxRate == 0 then
+        maxRate = rate + 10
+    end
+    local skillProbability = UTILS.Randomize(100, 1, minRate, maxRate)
+
+    if skillProbability <= 25 then
+        return AI.Skill.AVERAGE
+    elseif skillProbability > 25 and skillProbability <= 50 then
+        return AI.Skill.GOOD
+    elseif skillProbability > 50 and skillProbability <= 75 then
+        return AI.Skill.HIGH
+    elseif skillProbability > 75 then
+        return AI.Skill.EXCELLENT
+    end
+
+    return nil
 end
 
 Ala15vToolbox.TotalWar.Methods = true

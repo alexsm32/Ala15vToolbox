@@ -45,6 +45,10 @@ function TotalWar:onafterAddFleets(From, Event, To)
                     end
                     local units = asset.Units
                     local skill --REVIEW
+                    if asset.Training then
+                        skill = self:GetWarehouseAssetSkill(Fleet:GetVec2(), asset.Training.Static,
+                            asset.Training.Range, asset.Training.Rate, Coalition)
+                    end
                     --local type = asset.Type
                     local capabilities = asset.Capability
                     local weapons = asset.Weapons

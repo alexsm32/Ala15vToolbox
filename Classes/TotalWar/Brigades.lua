@@ -45,12 +45,16 @@ function TotalWar:onafterAddBrigades(From, Event, To)
                     end
                     local units = asset.Units
                     local skill --REVIEW
+                    if asset.Training then
+                        skill = self:GetWarehouseAssetSkill(Brigade:GetVec2(), asset.Training.Static,
+                            asset.Training.Range, asset.Training.Rate, Coalition)
+                    end
                     --local type = asset.Type
                     local capabilities = asset.Capability
 
                     if groups > 0 then
                         local Platoon = self:GeneratePlatoon(template, groups, units, skill, Alias .. template,
-                        capabilities)
+                            capabilities)
                         if Platoon then
                             Brigade:AddPlatoon(Platoon)
                         end
